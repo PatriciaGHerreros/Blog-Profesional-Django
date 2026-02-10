@@ -119,7 +119,7 @@ class PostUpdateView(LoginRequiredMixin,UserPassesTestMixin,UpdateView):#USERPAS
         return reverse('detalle_post', kwargs={'slug': self.object.slug})
     def test_func(self):
         post = self.get_object()
-        return self.request.user == post.author
+        return self.request.user == post.author or self.request.user.is_superuser #permitimos que el superusuario también pueda editar cualquier post
 class PostDeleteView(LoginRequiredMixin,UserPassesTestMixin,DeleteView):
     model = Post
     template_name = "blog/eliminar_post.html"
@@ -128,7 +128,7 @@ class PostDeleteView(LoginRequiredMixin,UserPassesTestMixin,DeleteView):
 
     def test_func(self):
         post = self.get_object()
-        return self.request.user == post.author 
+        return self.request.user == post.author or self.request.user.is_superuser #permitimos que el superusuario también pueda eliminar cualquier post
 
 class RegistroUsuarioCreateView(CreateView):
     model = User
