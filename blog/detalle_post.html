@@ -1,0 +1,87 @@
+{% extends "blog/base.html" %}
+
+{% block title %} {{ post.titulo }} {% endblock %}
+
+{% block contenido %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <header class="text-center mb-5">
+            <p class="text-uppercase text-muted small letter-spacing-2 mb-2" style="letter-spacing: 3px;">
+                {{ post.categoria.nombre }}
+            </p>
+            <h1 class="display-3 fw-bold mb-4" style="font-family: 'Playfair Display', serif;">{{ post.titulo }}</h1>
+            <div class="text-muted small">
+                Publicado por <strong>{{ post.author.username }}</strong> — {{ post.fecha_publicacion|date:"d M, Y" }}
+            </div>
+        </header>
+
+        {% if post.imagen %}
+        <div class="mb-5 shadow-sm">
+            <img src="{{ post.imagen.url }}" class="img-fluid rounded" style="max-width: 500px; height: auto; display: block; margin: auto;" alt="{{ post.titulo }}">
+        </div>
+        {% endif %}
+
+        <div class="article-body mb-5" style="font-size: 1.2rem; line-height: 1.9; font-weight: 300;">
+            {{ post.contenido|linebreaks }}
+        </div>
+
+        {% if user.is_authenticated %}
+            {% if user.is_superuser or user == post.author %}
+            <div class="d-flex border-top border-bottom py-4 mb-5">
+                <a href="{% url 'editar_post' post.slug %}" class="btn btn-dark btn-sm me-3 px-4 shadow-sm">
+                    <i class="fa-solid fa-pen-to-square me-2"></i>Editar Post
+                </a>
+                <a href="{% url 'eliminar_post' post.slug %}" class="btn btn-outline-danger btn-sm px-4">
+                    <i class="fa-solid fa-trash-can me-2"></i>Eliminar
+                </a>
+            </div>
+            {% endif %}
+        {% endif %}
+
+        <section class="mt-5 pt-5 border-top">
+            <h3 class="mb-5 fw-bold" style="font-family: 'Playfair Display', serif;">
+                <i class="fa-regular fa-comment me-3"></i>Comentarios ({{ comentarios.count }})
+            </h3>
+            
+            {% for comentario in comentarios %}
+            <div class="mb-5">
+                <div class="d-flex align-items-center mb-2">
+                    <span class="fw-bold me-3">{{ comentario.author.username }}</span>
+                    <span class="text-muted x-small" style="font-size: 0.75rem;">{{ comentario.fecha_comentario|date:"d/m/Y H:i" }}</span>
+                </div>
+                <p class="text-secondary" style="font-size: 1.05rem;">{{ comentario.texto }}</p>
+            </div>
+            {% empty %}
+            <p class="text-muted italic py-4">Aún no hay reflexiones en este post.</p>
+            {% endfor %}
+
+            {% if user.is_authenticated %}
+            <div class="bg-light p-5 mt-5 border shadow-sm">
+                <h5 class="mb-4 fw-bold">Añadir Comentario</h5>
+                <form method="POST" novalidate> 
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label class="form-label small text-uppercase fw-bold text-muted">Tu mensaje</label>
+                        <textarea name="texto" class="form-control border-0 rounded-0 p-3" rows="4" placeholder="Escribe tu comentario aquí..."></textarea>
+                        {% for error in form.texto.errors %}
+                            <div class="text-danger small mt-1">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <button type="submit" class="btn btn-dark px-5 py-3 w-100 w-md-auto">
+                        Publicar comentario
+                    </button>
+                </form>
+            </div>
+            {% else %}
+            <div class="text-center py-5 border mt-5 shadow-sm">
+                <p class="mb-3">¿Tienes algo que decir?</p>
+                <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-outline-dark rounded-pill px-5">
+                    Iniciar sesión para comentar
+                </a>
+            </div>
+            {% endif %}
+        </section>
+    </div>
+</div>
+{% endblock %}
