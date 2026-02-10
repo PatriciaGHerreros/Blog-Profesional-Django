@@ -1,0 +1,24 @@
+{% extends "blog/base.html" %}
+
+{%block title%} Añadir Publicación {%endblock%}
+{%block menu_crearpost %} active {%endblock%}
+
+    
+{% block contenido %}
+<h2 class="mb-4">Crear nueva publicación</h2>
+
+    <form method="POST" >
+        {% csrf_token %}
+        <label class="fw-bold my-2">Título</label>
+        {{ form.titulo }}
+        <label class="fw-bold my-2">Contenido</label>
+        {{ form.contenido }}
+        <label class="fw-bold my-2">Categoría</label>
+        {{form.categoria}}
+        <div class="form-check my-3">
+            {{form.publicado}}
+            <label class="form-check-label">Publicar ahora</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar</button>  
+    </form>
+{% endblock %}

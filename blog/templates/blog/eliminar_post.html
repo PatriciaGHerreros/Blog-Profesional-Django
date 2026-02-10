@@ -1,0 +1,22 @@
+{% extends "blog/base.html" %}
+
+{% block title %} Eliminar Publicación {% endblock %}
+
+{% block contenido %}
+<main class="container py-4 flex-grow-1">
+    <h2 class="mb-3 text-danger"> Eliminar publicación</h2>
+    <p>¿Seguro que deseas eliminar el post? Esta acción es irreversible.</p>
+
+    <form action= "" method="POST">
+        {% csrf_token %}
+        
+        <button type="submit" class="btn btn-danger me-2">
+            Sí, eliminar
+        </button>
+
+        <a href="{% url 'detalle_post' post.slug %}" class="btn btn-secondary">
+            Cancelar
+        </a>
+    </form>
+</main>
+{% endblock %}

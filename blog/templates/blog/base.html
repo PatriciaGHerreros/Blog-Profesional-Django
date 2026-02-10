@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>{% block titulo %}{% endblock %}</title>
+  <link rel="icon" href="{% static 'global/img/favicon.jpg' %}">
+
+  <link href="{% static 'global/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #fff !important; color: #1a1a1a; }
+    h1, h2, h3, .navbar-brand { font-family: 'Playfair Display', serif; }
+    .nav-link { color: #1a1a1a !important; font-weight: 400; letter-spacing: 0.5px; }
+    .btn-dark { background-color: #000; border: none; border-radius: 0; padding: 10px 25px; }
+  </style>
+  {% block stylesextra %} {% endblock %}
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-3" href="{% url 'index' %}">HIPENID.</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarBlog">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarBlog">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link {% block menu_index %}{% endblock %}" href="{% url 'index' %}">Inicio</a></li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item"><a class="nav-link {% block menu_crearpost %}{% endblock %}" href="{% url 'crear_post' %}">Crear Post</a></li>
+                        <li class="nav-item"><a class="nav-link {% block menu_mis_posts %}{% endblock %}" href="{% url 'mis_posts' %}">Mis Posts</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle fw-bold" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                {{user.username}}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm">
+                                <li><a class="dropdown-item small" href="#">{{user.first_name}} {{user.last_name}}</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form action="{% url 'logout' %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="dropdown-item small text-danger">Cerrar sesión</button>
+                                    </form>
+                                </li>   
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item ms-lg-3">
+                            <a href="{% url 'login' %}" class="btn btn-outline-dark btn-sm px-4 rounded-pill">Iniciar sesión</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5 flex-grow-1">
+        {% block contenido %}{% endblock %}
+    </div>
+
+    <footer class="bg-white border-top py-5 mt-auto">
+        <div class="container text-center">
+            <p class="mb-1 fw-bold fs-4">HIPENID.</p>
+            <p class="text-muted small">&copy; Patricia Garcia 2026 - Examen Tema 7- Todos los derechos reservados</p>
+        </div>
+    </footer>
+    <script src="{% static 'global/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

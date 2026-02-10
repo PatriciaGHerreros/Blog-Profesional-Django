@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Acceso de usuarios</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+      <link rel="icon" href="{% static 'global/img/favicon.jpg' %}">
+
+    <link href= "{% static 'global/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link
+        href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+        rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{% static 'login_css.css' %}">
+    <link rel="stylesheet" href="{% static 'blog/login_css.css' %}">
+</head>
+<body>
+
+    <div class="login-card">
+        <div class="brand">
+            <a href="{%url 'index'%}">
+                <img src="{%static 'global/img/favicon.jpg'%}" style="height: 60px;width: auto" alt="">
+            </a>
+        </div>
+
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
+            <div class="mb-3">
+                <label class="form-label">Usuario</label>
+                <input type="text"
+                id="id_username"
+                name="username"
+                class="form-control"
+                placeholder="Ingrese su usuario"    
+                required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Contraseña</label>
+                <input type="password"
+                id="id_password"
+                name="password"
+                class="form-control"
+                placeholder="Ingrese su contraseña"    
+                required>
+            </div>
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger" >
+                  Las credenciales introducidas no son correctas.
+                </div>
+            {% endif %}
+            <button type="submit" class="btn btn-primary w-100">
+                Iniciar sesión
+            </button>
+            <hr>
+            <p class="text-center mb-0">
+                ¿No tienes cuenta?
+                <a href="{% url 'registro' %}?next={{ request.GET.next }}" class="fw-semibold">
+                Regístrate aquí
+                </a>
+            </p>
+        </form>
+
+        <div class="login-footer">
+            Acceso restringido a usuarios registrados
+        </div>
+    </div>
+<script src="{% static 'global/vendor/bootstrap/js/bootstrap.bundle.min.js' %} "></script>
+</body>
+</html>
